@@ -67,7 +67,7 @@ void MergeList_L(LinkList La, LinkList *Lb, LinkList *Lc);
 void ReverseList_L(LinkList L);
 
 // Question 14
-void  SortList_L(LinkList L);
+bool SortList_L(LinkList L);
 
 
 int main(int argc, const char * argv[]) {
@@ -513,18 +513,25 @@ void ReverseList_L(LinkList L){
     }
 }
 
-void  SortList_L(LinkList L){
-    LinkList preNode = L->next;
-    LinkList curNode = preNode->next;
-    while (curNode) {
-        if(preNode->data > curNode->data){
-            LElemType_L temp = preNode->data;
-            preNode->data = curNode->data;
-            curNode->data = temp;
-            preNode = preNode->next;
-        }
-        curNode = preNode->next;
-        printf("test");
+bool  SortList_L(LinkList L){
+    if (L == NULL || L->next == NULL) {
+        return false;
     }
+    LinkList flagNode = NULL;
+    bool isChange = true;
+    while (flagNode != L->next || isChange) {
+        LinkList curNode = L;
+        isChange = false;
+        while (curNode->next && curNode->next != flagNode) {
+            if(curNode->data > curNode->next->data){
+                LElemType_L temp = curNode->data;
+                curNode->data = curNode->next->data;
+                curNode->next->data = temp;
+            }
+            curNode = curNode->next;
+        }
+        flagNode = curNode;
+    }
+    return true;
     
 }
