@@ -66,6 +66,9 @@ void MergeList_L(LinkList La, LinkList *Lb, LinkList *Lc);
 // Question 8
 void ReverseList_L(LinkList L);
 
+// Question 14
+void  SortList_L(LinkList L);
+
 
 int main(int argc, const char * argv[]) {
     LinkList L1;
@@ -119,8 +122,41 @@ int main(int argc, const char * argv[]) {
     
     
     // Question 11
+    DestroyList_L(&L3);
+    printf("销毁 L3 后：");
+    L3 ? printf(" L3 存在！\n") : printf(" L3 不存在！！\n");
+    printf("\n\n");
+    
+    // Question 12
+    LinkList L4;
+    InitList_L(&L4);
+    int c[] = {8, 6, 15, 9, 20, 15, 11};
+    for(i=0; i<7; i++){
+        printf("在 L4 第 %d 个位置插入 \"%d\" \n", i+1, c[i]);
+        ListInsert_L(L4, i+1, c[i]);
+    }
+    printf("\n\n");
+    
+    // Question 13
+    ListTraverse_L(L4, PrintElem);
+    printf("\n\n");
     
     
+    // Question 15
+    printf("L4进行排序\n");
+    SortList_L(L4);
+    printf("\n\n");
+    
+    // Question 16
+    printf("遍历L4\n");
+    ListTraverse_L(L4, PrintElem);
+    printf("\n\n");
+    
+    // Question 17
+    DestroyList_L(&L4);
+    printf("销毁 L4 后：");
+    L4 ? printf(" L4 存在！\n") : printf(" L4 不存在！！\n");
+    printf("\n\n");
     
     
     
@@ -475,4 +511,20 @@ void ReverseList_L(LinkList L){
         L->next = p;
         p = q;
     }
+}
+
+void  SortList_L(LinkList L){
+    LinkList preNode = L->next;
+    LinkList curNode = preNode->next;
+    while (curNode) {
+        if(preNode->data > curNode->data){
+            LElemType_L temp = preNode->data;
+            preNode->data = curNode->data;
+            curNode->data = temp;
+            preNode = preNode->next;
+        }
+        curNode = preNode->next;
+        printf("test");
+    }
+    
 }
