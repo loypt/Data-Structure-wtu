@@ -19,6 +19,7 @@ typedef int ElemType;
 
 #define LIST_INIT_SIZE 100
 #define LISTINCREMENT  10
+#define MaxSize 50
 
 #ifndef LELEMTYPE_SQ
 #define LELEMTYPE_SQ
@@ -243,6 +244,15 @@ int LocateElem_Sq(SqList L, LElemType_Sq e, Status(Compare)(LElemType_Sq, LElemT
         return 0;
 }
 
+int LocateElem_SqM(SqList L, LElemType_Sq e){
+    for (int i = 0; i<L.length; i++) {
+        if (L.elem[i] == e) {
+            return i+1;
+        }
+    }
+    return 0;
+}
+
 Status PriorElem_Sq(SqList L, LElemType_Sq cur_e, LElemType_Sq *pre_e)
 {
     int i = 1;
@@ -286,7 +296,8 @@ Status ListInsert_Sq(SqList *L, int i, LElemType_Sq e)
 
     if(i<1 || i>(*L).length+1)
         return ERROR;
-
+    
+    //动态分配空间
     if((*L).length >= (*L).listsize)
     {
         newbase = (LElemType_Sq*)realloc((*L).elem, ((*L).listsize+LISTINCREMENT)*sizeof(LElemType_Sq));
@@ -299,6 +310,7 @@ Status ListInsert_Sq(SqList *L, int i, LElemType_Sq e)
     
     q = &(*L).elem[i-1];
     
+    //移动元素
     for(p=&(*L).elem[(*L).length-1]; p>=q; --p)
         *(p+1) = *p;
     
@@ -306,6 +318,22 @@ Status ListInsert_Sq(SqList *L, int i, LElemType_Sq e)
     (*L).length++;
 
     return OK;
+}
+
+bool ListInsert_SqM(SqList *L, int i, LElemType_Sq e){
+    if(i<1 || i>L->length+1){
+        return false;
+    }
+    if (L->length == MaxSize) {
+        return false;
+    }
+    for (int j = L->length; j>=i; j--) {
+        L->elem[j] = L->elem[j-1];
+    }
+    L->elem[i-1] = e;
+    L->length++;
+    return true;
+    
 }
 
 Status ListDelete_Sq(SqList *L, int i, LElemType_Sq *e)
@@ -325,6 +353,18 @@ Status ListDelete_Sq(SqList *L, int i, LElemType_Sq *e)
     (*L).length--;
 
     return OK;
+}
+
+bool ListDelete_SqM(SqList *L, int i, LElemType_Sq *e){
+    if (i < 1 || i > L->length) {
+        return false;
+    }
+    e=&L->elem[i-1];
+    for (int j = i-1; j<L->length-1; j++) {
+        L->elem[j]=L->elem[j+1];
+    }
+    L->length--;
+    return true;
 }
 
 Status ListTraverse_Sq(SqList L, void(Visit)(LElemType_Sq))
