@@ -12,6 +12,7 @@
 #define OK 1
 #define ERROR 0
 #define INFEASIBLE -1
+#define OVERFLOW -2
 
 typedef int Status;
 
@@ -60,6 +61,7 @@ Status CreateList_HL(FILE *fp, LinkList *L, int n);
 
 Status CreateList_TL(FILE *fp, LinkList *L, int n);
 
+
 // Question 5
 void MergeList_L(LinkList La, LinkList *Lb, LinkList *Lc);
 
@@ -69,6 +71,8 @@ void ReverseList_L(LinkList L);
 // Question 14
 bool SortList_L(LinkList L);
 
+LinkList DisCreat_1(LinkList &A);
+
 
 int main(int argc, const char * argv[]) {
     LinkList L1;
@@ -77,17 +81,26 @@ int main(int argc, const char * argv[]) {
     
     // Question 1
     InitList_L(&L1);
-    int a[] = {3, 5, 6, 8, 11};
-    for(i=0; i<5; i++){
+    int a[] = {3, 5, 6, 8, 11, 15, 23, 16};
+    for(i=0; i<8; i++){
         printf("在 L1 第 %d 个位置插入 \"%d\" \n", i+1, a[i]);
         ListInsert_L(L1, i+1, a[i]);
     }
     printf("\n\n");
     
-    // Question 2
+    // new test
+    LNode *B = DisCreat_1(L1);
+    printf("A: ");
     ListTraverse_L(L1, PrintElem);
     printf("\n\n");
+    printf("B: ");
+    ListTraverse_L(B, PrintElem);
+    printf("\n\n");
     
+    //Question 2
+    ListTraverse_L(L1, PrintElem);
+    printf("\n\n");
+
     // Question 3
     LinkList L2;
     InitList_L(&L2);
@@ -97,36 +110,36 @@ int main(int argc, const char * argv[]) {
         ListInsert_L(L2, i+1, b[i]);
     }
     printf("\n\n");
-    
+
     // Question 4
     ListTraverse_L(L2, PrintElem);
     printf("\n\n");
-    
+
     // Question 6
     LinkList L3;
     InitList_L(&L3);
     MergeList_L(L1, &L2, &L3);
     printf("合并La和Lb为Lc = ");
-    
+
     // Question 7
     ListTraverse_L(L3, PrintElem);
     printf("\n\n");
-    
+
     // Question 9
     ReverseList_L(L3);
     printf("反转链表L3\n");
-    
+
     // Questoin 10
     ListTraverse_L(L3, PrintElem);
     printf("\n\n");
-    
-    
+
+
     // Question 11
     DestroyList_L(&L3);
     printf("销毁 L3 后：");
     L3 ? printf(" L3 存在！\n") : printf(" L3 不存在！！\n");
     printf("\n\n");
-    
+
     // Question 12
     LinkList L4;
     InitList_L(&L4);
@@ -136,28 +149,27 @@ int main(int argc, const char * argv[]) {
         ListInsert_L(L4, i+1, c[i]);
     }
     printf("\n\n");
-    
+
     // Question 13
     ListTraverse_L(L4, PrintElem);
     printf("\n\n");
-    
-    
+
+
     // Question 15
     printf("L4进行排序\n");
     SortList_L(L4);
     printf("\n\n");
-    
+
     // Question 16
     printf("遍历L4\n");
     ListTraverse_L(L4, PrintElem);
     printf("\n\n");
-    
+
     // Question 17
     DestroyList_L(&L4);
     printf("销毁 L4 后：");
     L4 ? printf(" L4 存在！\n") : printf(" L4 不存在！！\n");
     printf("\n\n");
-    
     
     
     
@@ -534,4 +546,30 @@ bool  SortList_L(LinkList L){
     }
     return true;
     
+}
+
+
+// 将表A中结点按序号的奇偶性分解到表A或表B中
+LinkList DisCreat_1(LinkList &A){
+    int i = 0;
+    LinkList B = (LinkList)malloc(sizeof(LNode));
+    B->next = NULL;
+    LNode *ra = A, *rb = B;
+    
+    LNode *p = A->next;
+    A->next = NULL;
+    while (p!=NULL) {
+        i++;
+        if(i % 2 == 0){
+            rb->next = p;
+            rb = p;
+        }else{
+            ra->next = p;
+            ra = p;
+        }
+        p = p->next;
+    }
+    ra->next = NULL;
+    rb->next = NULL;
+    return B;
 }
